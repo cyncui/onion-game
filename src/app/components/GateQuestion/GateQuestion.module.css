@@ -1,0 +1,108 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 650px;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 50vh;
+}
+
+.logo {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+}
+
+.textBlock {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headline {
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.02em;
+  font-style: italic;
+}
+
+.headlineBold {
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+
+.questionBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.question {
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.02em;
+}
+
+.buttons {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.btn {
+  padding: 0.75rem 2.5rem;
+  border: none;
+  border-radius: 100px;
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-pixel);
+}
+
+.btnYes {
+  composes: btn;
+  background: linear-gradient(135deg, #2d5016, #4a7c2e);
+  color: #f0f0e8;
+  box-shadow: 0 4px 16px rgba(45, 80, 22, 0.35);
+}
+
+.btnYes:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(45, 80, 22, 0.45);
+}
+
+.btnNo {
+  composes: btn;
+  background: linear-gradient(135deg, #55392a, #6b503c);
+  color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 16px rgba(85, 57, 42, 0.3);
+}
+
+.btnNo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(85, 57, 42, 0.4);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.backers {
+  font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.04em;
+}
