@@ -41,18 +41,28 @@
 .restart {
   margin-top: 0.5rem;
   padding: 0.5rem 1.5rem;
-  background: transparent;
-  border: 1px solid rgba(40, 30, 25, 0.2);
-  border-radius: 100px;
-  color: rgba(40, 30, 25, 0.45);
+  background: linear-gradient(180deg, rgba(40, 30, 25, 0.05) 0%, rgba(40, 30, 25, 0.1) 100%);
+  border: 2px solid;
+  border-color: rgba(40, 30, 25, 0.15) rgba(40, 30, 25, 0.25) rgba(40, 30, 25, 0.25) rgba(40, 30, 25, 0.15);
+  border-radius: 4px;
+  color: rgba(40, 30, 25, 0.5);
   font-size: clamp(0.75rem, 1.5vw, 0.85rem);
   font-family: var(--font-pixel);
   cursor: pointer;
-  letter-spacing: 0.03em;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 0 rgba(40, 30, 25, 0.12);
 }
 
 .restart:hover {
-  border-color: rgba(40, 30, 25, 0.4);
   color: rgba(40, 30, 25, 0.7);
+  background: linear-gradient(180deg, rgba(40, 30, 25, 0.08) 0%, rgba(40, 30, 25, 0.14) 100%);
+}
+
+.restart:active {
+  transform: translateY(1px);
+  box-shadow: inset 1px 1px 0 rgba(40, 30, 25, 0.1);
 }

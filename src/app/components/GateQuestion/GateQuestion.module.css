@@ -62,43 +62,70 @@
 }
 
 .btn {
-  padding: 0.75rem 2.5rem;
-  border: none;
-  border-radius: 100px;
+  padding: 0.7rem 2.5rem;
+  border: 2px solid;
+  border-radius: 4px;
   font-size: clamp(0.9rem, 2vw, 1.05rem);
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
   font-family: var(--font-pixel);
+  position: relative;
+  image-rendering: pixelated;
 }
 
 .btnYes {
   composes: btn;
-  background: linear-gradient(135deg, #2d5016, #4a7c2e);
+  background: linear-gradient(180deg, #5a9e2e 0%, #3a7a1a 100%);
   color: #f0f0e8;
-  box-shadow: 0 4px 16px rgba(45, 80, 22, 0.35);
+  border-color: #7ac842 #2a5c10 #2a5c10 #7ac842;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.2),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.2),
+    0 3px 0 #1e4a0c,
+    0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btnYes:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(45, 80, 22, 0.45);
+  background: linear-gradient(180deg, #68b236 0%, #44891f 100%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.25),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.2),
+    0 4px 0 #1e4a0c,
+    0 6px 12px rgba(0, 0, 0, 0.35);
 }
 
 .btnNo {
   composes: btn;
-  background: linear-gradient(135deg, #55392a, #6b503c);
+  background: linear-gradient(180deg, #6b503c 0%, #4a3525 100%);
   color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 16px rgba(85, 57, 42, 0.3);
+  border-color: #8a6a52 #3a2518 #3a2518 #8a6a52;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.15),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.2),
+    0 3px 0 #2a1a10,
+    0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btnNo:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(85, 57, 42, 0.4);
+  background: linear-gradient(180deg, #7a5e48 0%, #55402c 100%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.2),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.2),
+    0 4px 0 #2a1a10,
+    0 6px 12px rgba(0, 0, 0, 0.35);
 }
 
 .btn:active {
-  transform: translateY(0);
+  transform: translateY(2px);
+  box-shadow:
+    inset 1px 1px 0 rgba(0, 0, 0, 0.2),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .backers {

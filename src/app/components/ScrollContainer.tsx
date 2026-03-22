@@ -86,11 +86,13 @@ const accentStyle = {
 /* ---- Card components ---- */
 
 const cardStyle = {
-  background: "rgba(255, 255, 255, 0.06)",
-  border: "1px solid rgba(255, 255, 255, 0.1)",
-  borderRadius: "12px",
+  background: "linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)",
+  border: "2px solid",
+  borderColor: "rgba(255, 255, 255, 0.18) rgba(255, 255, 255, 0.06) rgba(255, 255, 255, 0.06) rgba(255, 255, 255, 0.18)",
+  borderRadius: "4px",
   padding: "1.25rem 1.5rem",
   backdropFilter: "blur(8px)",
+  boxShadow: "inset 1px 1px 0 rgba(255, 255, 255, 0.08), inset -1px -1px 0 rgba(0, 0, 0, 0.15), 0 2px 0 rgba(0, 0, 0, 0.2)",
 } as const;
 
 const cardTitleBase = {
@@ -240,37 +242,65 @@ const LEVELS: LevelDef[] = [
   {
     label: "The Team",
     content: (
-      <div style={{ maxWidth: 760, padding: "1.5rem", display: "flex", gap: "2rem", alignItems: "flex-start", flexWrap: "wrap" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/helen.png"
-          alt="Helen Huang"
+      <div style={{ maxWidth: 760, padding: "1.5rem" }}>
+        <div
           style={{
-            flexShrink: 0,
-            width: "clamp(140px, 20vw, 200px)",
-            height: "auto",
-            borderRadius: "12px",
-            objectFit: "contain",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gridTemplateRows: "auto auto auto auto",
+            gap: "0.6rem",
           }}
-        />
-        <div style={{ flex: 1, minWidth: 280 }}>
-          <h2 style={headlineStyle}>Bootstrapped to 7-figures.</h2>
-          <h2 style={{ ...headlineStyle, marginBottom: "1.25rem" }}>Mission-driven. Building bigger.</h2>
-          <p style={{ ...bodyStyle, fontWeight: 600, marginBottom: "1rem" }}>
-            Helen Huang — Founder & CEO
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.6rem", marginBottom: "1rem" }}>
-            <InfoCard variant="credential" title="2nd" desc="time founder" />
-            <InfoCard variant="credential" title="Forbes" desc="30 Under 30" />
-            <InfoCard variant="credential" title="#1" desc="Product of the Day" />
-            <InfoCard variant="credential" title="30K+" desc="launch audience" />
+        >
+          {/* Photo + name — left column spanning 3 rows */}
+          <div style={{ ...cardStyle, gridColumn: "1", gridRow: "1 / 4", padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/helen.png"
+              alt="Helen Huang"
+              style={{
+                width: "100%",
+                flex: 1,
+                objectFit: "cover",
+                borderRadius: "2px 2px 0 0",
+              }}
+            />
+            <div style={{ padding: "0.6rem 0.75rem", textAlign: "center" }}>
+              <p style={{ ...accentStyle, fontSize: "clamp(0.85rem, 2vw, 1.05rem)", marginBottom: "0.1rem" }}>
+                Helen Huang
+              </p>
+              <p style={{ ...cardDescBase, fontSize: "clamp(0.65rem, 1.3vw, 0.75rem)" }}>
+                Founder & CEO
+              </p>
+            </div>
           </div>
-          <Card>
-            <p style={{ fontSize: "clamp(0.8rem, 1.6vw, 0.9rem)", opacity: 0.7, lineHeight: 1.6 }}>
+
+          {/* Headline card — spans 2 cols */}
+          {/* Headline — right side row 1 */}
+          <Card style={{ gridColumn: "2 / 4", gridRow: "1", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <h2 style={{ ...headlineStyle, fontSize: "clamp(1rem, 2.5vw, 1.3rem)", marginBottom: "0.15rem" }}>
+              Bootstrapped to 7-figures.
+            </h2>
+            <p style={{ ...cardDescBase, fontSize: "clamp(0.75rem, 1.5vw, 0.85rem)" }}>
+              Mission-driven. Building bigger.
+            </p>
+          </Card>
+
+          {/* Bio — right side row 2 */}
+          <Card style={{ gridColumn: "2 / 4", gridRow: "2" }}>
+            <p style={{ fontSize: "clamp(0.75rem, 1.5vw, 0.85rem)", opacity: 0.7, lineHeight: 1.6 }}>
               Former PM at Microsoft and Zynga<br />
               Bootstrapped a profitable edtech startup to 7-figure revenue
             </p>
           </Card>
+
+          {/* Credentials — right side row 3 */}
+          <InfoCard variant="credential" title="2nd" desc="time founder" />
+          <InfoCard variant="credential" title="#1" desc="PH #1" />
+
+          {/* Bottom row — full width */}
+          <InfoCard variant="credential" title="Forbes" desc="30 Under 30" />
+          <InfoCard variant="credential" title="30K+" desc="launch audience" />
+          <InfoCard variant="credential" title="7-fig" desc="bootstrapped" />
         </div>
       </div>
     ),
