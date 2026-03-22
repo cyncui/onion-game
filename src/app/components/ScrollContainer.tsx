@@ -666,6 +666,8 @@ export default function ScrollContainer() {
   const [viewportH, setViewportH] = useState(0);
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
   const isMobile = useIsMobile();
 
   const { drawingDataURL } = useDrawingContext();
@@ -702,6 +704,17 @@ export default function ScrollContainer() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
+
+  // Start music when user answers the gate question (first real interaction)
+  useEffect(() => {
+    if (gateAnswer && audioRef.current) {
+      const audio = audioRef.current;
+      audio.volume = 0.35;
+      audio.muted = false;
+      audio.play().catch(() => {});
+      setIsMuted(false);
+    }
+  }, [gateAnswer]);
 
   // When user answers "yes", scroll to Level 1's first page
   useEffect(() => {
@@ -937,6 +950,53 @@ export default function ScrollContainer() {
           <CompanionSprite currentLevel={currentLevelIndex} />
         )}
       </div>
+
+      {/* Soundtrack + mute toggle */}
+      <audio
+        ref={audioRef}
+        src="/audio/soundtrack.mp3"
+        loop
+        preload="auto"
+      />
+      <button
+        onClick={() => {
+          const audio = audioRef.current;
+          if (!audio) return;
+          if (isMuted) {
+            audio.muted = false;
+            audio.play().catch(() => {});
+            setIsMuted(false);
+          } else {
+            audio.muted = true;
+            setIsMuted(true);
+          }
+        }}
+        style={{
+          position: "fixed",
+          top: "1rem",
+          right: "1rem",
+          zIndex: 100,
+          width: 40,
+          height: 40,
+          borderRadius: 4,
+          border: "2px solid",
+          borderColor: "rgba(255,255,255,0.2) rgba(255,255,255,0.08) rgba(255,255,255,0.08) rgba(255,255,255,0.2)",
+          background: "rgba(255,255,255,0.08)",
+          color: "rgba(255,255,255,0.7)",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "1.1rem",
+          fontFamily: "var(--font-pixel)",
+          boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.1), 0 2px 0 rgba(0,0,0,0.2)",
+          transition: "transform 0.08s ease, box-shadow 0.08s ease",
+        }}
+        aria-label={isMuted ? "Unmute" : "Mute"}
+        title={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? "🔇" : "🔊"}
+      </button>
     </>
   );
 }
