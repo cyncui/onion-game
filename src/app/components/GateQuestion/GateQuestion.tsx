@@ -27,14 +27,19 @@ export default function GateQuestion() {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <motion.p
+      <motion.div
         className={styles.logo}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
-        TROVE
-      </motion.p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/trove-logo-white.svg"
+          alt="Trove"
+          className={styles.logoImg}
+        />
+      </motion.div>
 
       <div className={styles.textBlock}>
         <AnimatePresence mode="wait">

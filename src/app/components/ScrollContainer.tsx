@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef, type ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDrawingContext } from "./DrawingProvider";
 import { useGateContext } from "./GateProvider";
@@ -74,15 +81,21 @@ function interpolateColor(
 /* ---- Mobile detection ---- */
 
 function useIsMobile(breakpoint = 640) {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
-    setIsMobile(mql.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, [breakpoint]);
-  return isMobile;
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
+      mql.addEventListener("change", onStoreChange);
+      return () => mql.removeEventListener("change", onStoreChange);
+    },
+    [breakpoint]
+  );
+
+  const getSnapshot = useCallback(
+    () => window.matchMedia(`(max-width: ${breakpoint}px)`).matches,
+    [breakpoint]
+  );
+
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
 }
 
 /* ------------------------------------------------------------------ */
@@ -678,8 +691,6 @@ export default function ScrollContainer() {
   const gardenStartPage = flatIndexForLevel(8); // Level 8
 
   useEffect(() => {
-    setViewportH(window.innerHeight);
-
     function handleScroll() {
       if (rafRef.current) return;
       rafRef.current = requestAnimationFrame(() => {
@@ -695,6 +706,8 @@ export default function ScrollContainer() {
       setViewportH(window.innerHeight);
     }
 
+    queueMicrotask(handleResize);
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
     handleScroll();
@@ -709,10 +722,11 @@ export default function ScrollContainer() {
   useEffect(() => {
     if (gateAnswer && audioRef.current) {
       const audio = audioRef.current;
-      audio.volume = 0.2;
+      audio.volume = 0.1;
       audio.muted = false;
-      audio.play().catch(() => {});
-      setIsMuted(false);
+      void audio.play().finally(() => {
+        setIsMuted(false);
+      });
     }
   }, [gateAnswer]);
 
