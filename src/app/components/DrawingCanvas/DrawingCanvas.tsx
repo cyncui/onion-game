@@ -10,7 +10,6 @@ const COLORS = [
   "#4a7c2e", // leaf green
   "#8fbc5a", // light green
   "#6b503c", // earth brown
-  "#3e2417", // dark brown
   "#c4956a", // tan
   "#e8dcc8", // cream
 ];

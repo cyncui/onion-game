@@ -73,20 +73,20 @@ export default function GateQuestion() {
               className={styles.questionBlock}
             >
               <p className={styles.question}>
-                Do you think that&rsquo;s a problem?
+                Are you ready to see clearly?
               </p>
               <div className={styles.buttons}>
                 <button
                   className={styles.btnYes}
                   onClick={() => setGateAnswer("yes")}
                 >
-                  Yes
+                  Show me
                 </button>
                 <button
                   className={styles.btnNo}
                   onClick={() => setGateAnswer("no")}
                 >
-                  No
+                  Not yet
                 </button>
               </div>
             </motion.div>
@@ -94,14 +94,14 @@ export default function GateQuestion() {
         </AnimatePresence>
       </div>
 
-      <motion.p
+      {/* <motion.p
         className={styles.backers}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.5 }}
         transition={{ delay: 1.5, duration: 1 }}
       >
         Backed by Slack Fund &bull; Betaworks &bull; True Ventures &bull; RRE Ventures
-      </motion.p>
+      </motion.p> */}
     </motion.div>
   );
 }
