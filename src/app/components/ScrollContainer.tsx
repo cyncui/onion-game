@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef, type ReactNode } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useDrawingContext } from "./DrawingProvider";
 import { useGateContext } from "./GateProvider";
 import DrawingCanvas from "./DrawingCanvas/DrawingCanvas";
@@ -14,14 +14,15 @@ import ExitScreen from "./ExitScreen/ExitScreen";
  * Per-level colors — distributed dynamically across all flat pages.
  */
 const LEVEL_COLORS: [number, number, number][] = [
-  [0x2c, 0x18, 0x10], // Level 0 — Dark brown bedrock
-  [0x3e, 0x24, 0x17], // Level 1 — Warm dark earth
-  [0x55, 0x3a, 0x28], // Level 2 — Rich soil
-  [0x6b, 0x50, 0x3c], // Level 3 — Lighter earth
-  [0x7a, 0x6e, 0x5a], // Level 4 — Near surface
-  [0x6e, 0x8b, 0x6e], // Level 5 — Muted green
-  [0x7a, 0xa8, 0xb8], // Level 6 — Grey-blue
-  [0x87, 0xce, 0xeb], // Level 7 — Sky blue
+  [0x2c, 0x18, 0x10], // Level 0 — Dark brown bedrock (Gate)
+  [0x34, 0x1e, 0x13], // Level 1 — Drawing canvas
+  [0x3e, 0x24, 0x17], // Level 2 — Warm dark earth (Problem)
+  [0x55, 0x3a, 0x28], // Level 3 — Rich soil (Solution)
+  [0x6b, 0x50, 0x3c], // Level 4 — Lighter earth (Traction)
+  [0x7a, 0x6e, 0x5a], // Level 5 — Near surface (Team)
+  [0x6e, 0x8b, 0x6e], // Level 6 — Muted green (Landscape)
+  [0x7a, 0xa8, 0xb8], // Level 7 — Grey-blue (Engine)
+  [0x87, 0xce, 0xeb], // Level 8 — Sky blue (Garden)
 ];
 
 function buildColorStops(
@@ -223,7 +224,13 @@ const LEVELS: LevelDef[] = [
     pages: [{ content: null }], // GateQuestion renders here
   },
 
-  /* Level 1 — The Problem */
+  /* Level 1 — Drawing Canvas (dedicated level) */
+  {
+    label: "Your Companion",
+    pages: [{ content: null }], // DrawingCanvas renders here
+  },
+
+  /* Level 2 — The Problem */
   {
     label: "The Problem",
     pages: [
@@ -255,7 +262,7 @@ const LEVELS: LevelDef[] = [
     ],
   },
 
-  /* Level 2 — The Solution */
+  /* Level 3 — The Solution */
   {
     label: "The Solution",
     pages: [
@@ -290,7 +297,7 @@ const LEVELS: LevelDef[] = [
     ],
   },
 
-  /* Level 3 — Traction */
+  /* Level 4 — Traction */
   {
     label: "Traction",
     pages: [
@@ -322,13 +329,13 @@ const LEVELS: LevelDef[] = [
     ],
   },
 
-  /* Level 4 — The Team (uses isMobile via TeamPage component below) */
+  /* Level 5 — The Team (uses isMobile via TeamPage component below) */
   {
     label: "The Team",
     pages: [{ content: "TEAM_PAGE" as unknown as ReactNode }], // Rendered dynamically
   },
 
-  /* Level 5 — The Landscape */
+  /* Level 6 — The Landscape */
   {
     label: "The Landscape",
     pages: [
@@ -362,7 +369,7 @@ const LEVELS: LevelDef[] = [
     ],
   },
 
-  /* Level 6 — The Engine */
+  /* Level 7 — The Engine */
   {
     label: "The Engine",
     pages: [
@@ -384,7 +391,7 @@ const LEVELS: LevelDef[] = [
     ],
   },
 
-  /* Level 7 — The Garden */
+  /* Level 8 — The Garden */
   {
     label: "The Garden",
     pages: [
@@ -657,17 +664,16 @@ function FlywheelPage() {
 export default function ScrollContainer() {
   const [scrollY, setScrollY] = useState(0);
   const [viewportH, setViewportH] = useState(0);
-  const hasTriggeredDrawing = useRef(false);
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
   const isMobile = useIsMobile();
 
-  const { drawingDataURL, isDrawing, setIsDrawing } = useDrawingContext();
+  const { drawingDataURL } = useDrawingContext();
   const { gateAnswer } = useGateContext();
 
   // Flat page index for key levels
   const drawingPageIndex = flatIndexForLevel(1); // Level 1 first page
-  const gardenStartPage = flatIndexForLevel(7); // Level 7
+  const gardenStartPage = flatIndexForLevel(8); // Level 8
 
   useEffect(() => {
     setViewportH(window.innerHeight);
@@ -697,18 +703,6 @@ export default function ScrollContainer() {
     };
   }, []);
 
-  // Scroll lock while drawing or gate unanswered
-  useEffect(() => {
-    if (isDrawing || gateAnswer === null) {
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.documentElement.style.overflow = "";
-    }
-    return () => {
-      document.documentElement.style.overflow = "";
-    };
-  }, [isDrawing, gateAnswer]);
-
   // When user answers "yes", scroll to Level 1's first page
   useEffect(() => {
     if (gateAnswer === "yes" && viewportH > 0) {
@@ -732,20 +726,21 @@ export default function ScrollContainer() {
     return 0;
   })();
 
-  // Trigger drawing mode when reaching Level 1's first page
+  // Scroll lock while drawing or gate unanswered
+  const isOnDrawingPage = gateAnswer === "yes" && !drawingDataURL &&
+    currentPageFloat >= drawingPageIndex - 0.3 && currentPageFloat <= drawingPageIndex + 0.5;
   useEffect(() => {
-    if (
-      gateAnswer === "yes" &&
-      !hasTriggeredDrawing.current &&
-      !drawingDataURL &&
-      !isDrawing &&
-      currentPageFloat >= drawingPageIndex - 0.2 &&
-      currentPageFloat <= drawingPageIndex + 0.5
-    ) {
-      hasTriggeredDrawing.current = true;
-      setIsDrawing(true);
+    if (isOnDrawingPage || gateAnswer === null) {
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "";
     }
-  }, [gateAnswer, currentPageFloat, drawingDataURL, isDrawing, setIsDrawing, drawingPageIndex]);
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [isOnDrawingPage, gateAnswer]);
+
+  // Drawing page shows canvas deterministically — no useEffect race
 
   const getPageTransform = useCallback(
     (flatIndex: number) => {
@@ -810,8 +805,8 @@ export default function ScrollContainer() {
 
           const isGate = fp.levelIndex === 0 && fp.pageIndex === 0;
           const isLastPage = fp.globalIndex === TOTAL_PAGES - 1;
-          const isDrawingPage = fp.globalIndex === drawingPageIndex;
-          const showCanvas = isDrawingPage && isDrawing && !drawingDataURL;
+          const isDrawingPage = fp.levelIndex === 1;
+          const showCanvas = isDrawingPage && gateAnswer === "yes" && !drawingDataURL;
           const showGateQuestion = isGate && gateAnswer === null;
           const forceIdentity = showCanvas;
 
@@ -840,28 +835,40 @@ export default function ScrollContainer() {
                 willChange: "transform, opacity",
               }}
             >
-              {showGateQuestion ? (
-                <AnimatePresence>
-                  <GateQuestion />
-                </AnimatePresence>
-              ) : showCanvas ? (
-                <DrawingCanvas />
-              ) : (
-                <div
-                  style={{
-                    textAlign: "left",
-                    color: isLight
-                      ? "rgba(255,255,255,0.85)"
-                      : "rgba(30,30,30,0.85)",
-                    transition: "color 0.5s ease",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  {pageContent}
-                </div>
-              )}
+              <AnimatePresence mode="wait">
+                {showGateQuestion ? (
+                  <GateQuestion key="gate" />
+                ) : showCanvas ? (
+                  <motion.div
+                    key="drawing-canvas"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                  >
+                    <DrawingCanvas />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="page-content"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    style={{
+                      textAlign: "center",
+                      color: isLight
+                        ? "rgba(255,255,255,0.85)"
+                        : "rgba(30,30,30,0.85)",
+                      transition: "color 0.5s ease",
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {pageContent}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}
@@ -900,6 +907,17 @@ export default function ScrollContainer() {
               }}
             />
           </div>
+        )}
+
+        {/* Hidden preload — decode avatar image before sprite appears */}
+        {drawingDataURL && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={drawingDataURL}
+            alt=""
+            decoding="async"
+            style={{ position: "absolute", width: 0, height: 0, opacity: 0, pointerEvents: "none" }}
+          />
         )}
 
         {/* Companion sprite — appears after drawing */}

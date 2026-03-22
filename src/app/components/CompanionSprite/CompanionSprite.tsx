@@ -15,16 +15,16 @@ interface Props {
  *  Levels 6-7  → sky (240px)
  */
 function getStage(level: number) {
-  if (level <= 3) return { size: 120, className: styles.underground, key: "underground" };
-  if (level <= 5) return { size: 180, className: styles.midway, key: "mid" };
-  return { size: 240, className: styles.sky, key: "sky" };
+  if (level <= 4) return { size: 120, className: styles.underground };
+  if (level <= 6) return { size: 180, className: styles.midway };
+  return { size: 240, className: styles.sky };
 }
 
 export default function CompanionSprite({ currentLevel }: Props) {
   const { drawingDataURL } = useDrawingContext();
   if (!drawingDataURL) return null;
 
-  const { size, className, key } = getStage(currentLevel);
+  const { size, className } = getStage(currentLevel);
 
   return (
     <motion.div
@@ -32,7 +32,7 @@ export default function CompanionSprite({ currentLevel }: Props) {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      key={key}
+      style={{ willChange: "transform, opacity" }}
     >
       <motion.img
         src={drawingDataURL}
@@ -41,6 +41,7 @@ export default function CompanionSprite({ currentLevel }: Props) {
         animate={{ width: size, height: size }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
         style={{ width: size, height: size }}
+        decoding="sync"
       />
     </motion.div>
   );

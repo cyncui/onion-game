@@ -12,6 +12,8 @@
   display: block;
   object-fit: contain;
   animation: float 3s ease-in-out infinite;
+  transition: filter 0.6s ease;
+  will-change: transform, opacity, filter;
 }
 
 /* Underground: dark overlay */
