@@ -709,7 +709,7 @@ export default function ScrollContainer() {
   useEffect(() => {
     if (gateAnswer && audioRef.current) {
       const audio = audioRef.current;
-      audio.volume = 0.35;
+      audio.volume = 0.2;
       audio.muted = false;
       audio.play().catch(() => {});
       setIsMuted(false);
