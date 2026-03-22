@@ -976,26 +976,60 @@ export default function ScrollContainer() {
           top: "1rem",
           right: "1rem",
           zIndex: 100,
-          width: 40,
-          height: 40,
+          width: 36,
+          height: 36,
+          padding: 0,
           borderRadius: 4,
           border: "2px solid",
           borderColor: "rgba(255,255,255,0.2) rgba(255,255,255,0.08) rgba(255,255,255,0.08) rgba(255,255,255,0.2)",
           background: "rgba(255,255,255,0.08)",
-          color: "rgba(255,255,255,0.7)",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: "1.1rem",
-          fontFamily: "var(--font-pixel)",
           boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.1), 0 2px 0 rgba(0,0,0,0.2)",
           transition: "transform 0.08s ease, box-shadow 0.08s ease",
+          overflow: "hidden",
         }}
         aria-label={isMuted ? "Unmute" : "Mute"}
         title={isMuted ? "Unmute" : "Mute"}
       >
-        {isMuted ? "🔇" : "🔊"}
+        <div style={{ position: "relative", width: 22, height: 22 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/speaker.png"
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              imageRendering: "pixelated",
+              filter: "invert(1)",
+              opacity: isMuted ? 0.5 : 0.85,
+            }}
+          />
+          {/* Diagonal strike-through for muted state */}
+          {isMuted && (
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: "140%",
+                  height: 2,
+                  background: "rgba(255,255,255,0.85)",
+                  transform: "rotate(-45deg)",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.5)",
+                }}
+              />
+            </div>
+          )}
+        </div>
       </button>
     </>
   );
