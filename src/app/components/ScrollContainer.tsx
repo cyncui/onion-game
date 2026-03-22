@@ -710,6 +710,18 @@ export default function ScrollContainer() {
     }
   }, [gateAnswer, viewportH, drawingPageIndex]);
 
+  // Auto-scroll to Level 2 (The Problem) after drawing is saved
+  const prevDrawingDataURL = useRef(drawingDataURL);
+  useEffect(() => {
+    if (drawingDataURL && !prevDrawingDataURL.current && viewportH > 0) {
+      const problemPageIndex = flatIndexForLevel(2);
+      setTimeout(() => {
+        window.scrollTo({ top: problemPageIndex * viewportH, behavior: "smooth" });
+      }, 400); // brief pause to let canvas exit animation play
+    }
+    prevDrawingDataURL.current = drawingDataURL;
+  }, [drawingDataURL, viewportH]);
+
   // Scroll math based on flat pages
   const maxScroll = (TOTAL_PAGES + 1) * viewportH;
   const progress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
